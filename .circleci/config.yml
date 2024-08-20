@@ -12,7 +12,7 @@ jobs:
       - run:
           name: Debug Test Files
           command: |
-            output="{ $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[/.]' '{print $(NF-1) "/*"}' | paste -sd, -) }"
+            output="{ $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[/.]' '{print $(NF-1)}' | paste -sd, -) }"
             echo "Test files found:"
             echo "$output"
 workflows:
