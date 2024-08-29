@@ -16,6 +16,8 @@ jobs:
               echo "Test files found:"
               selectByName=$(echo "$output" | awk '{for(i=1;i<=NF;i++) printf "\x27%s\x27%s", $i, (i==NF ? "" : ", ")}')
               echo "$selectByName"
+              selectByName="{selectByName}"
+              echo "$selectByName"
               
 workflows:
   version: 2
