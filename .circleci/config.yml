@@ -12,14 +12,11 @@ jobs:
       - run:
           name: Debug Test Files
           command: |
-              echo "Glob output:"
-              circleci tests glob 'tests/**/*.m'
-
-              echo "Split output:"
-              circleci tests glob 'tests/**/*.m' | circleci tests split
-
               echo "Awk output:"
               circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[/.]' '{print $(NF-1) "/*"}'
+              output=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[/.]' '{print $(NF-1) "/*"}')
+              echo "Test files found:"
+              echo "$output"
 workflows:
   version: 2
   try:
