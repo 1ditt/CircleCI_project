@@ -12,8 +12,15 @@ jobs:
       - run:
           name: Debug Test Files
           command: |
-               selectByName=$(echo "test1 test2 test3" | awk '{for(i=1;i<=NF;i++) printf "\x27\x27%s\x27\x27%s", $i, (i==NF ? "" : ", ")}')
-               echo "$selectByName"
+                      PARAM_SELECT_BY_NAME="this is a test's string with-some_single'"
+                      selectByName=$(echo "$PARAM_SELECT_BY_NAME" | awk '{
+                          for(i=1; i<=NF; i++) {
+                              gsub(/\047/, "\047\047", $i);  # Escape single quotes by doubling them
+                              printf "\047%s\047%s", $i, (i==NF ? "" : ", ");
+                          }
+                      }')
+                      selectByName="{$selectByName}"
+                      echo "$selectByName"
 
               
 workflows:
