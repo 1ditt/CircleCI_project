@@ -12,11 +12,11 @@ jobs:
       - run:
           name: Debug Test Files
           command: |
-              echo "Awk output:"
-              circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[/.]' '{print $(NF-1) "/*"}'
               output=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[/.]' '{print $(NF-1) "/*"}')
               echo "Test files found:"
-              echo "$output"
+              selectByName=$(echo "$output" | awk '{for(i=1;i<=NF;i++) printf "\x27%s\x27%s", $i, (i==NF ? "" : ", ")}')
+              echo "$selectByName"
+              
 workflows:
   version: 2
   try:
