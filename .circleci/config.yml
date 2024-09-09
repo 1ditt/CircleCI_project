@@ -10,7 +10,7 @@ jobs:
       - checkout  
       - run:
           command: |
-                    x= $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $(NF-1) "/*"}'
+                    x= $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $(NF-1) "/*"}')
                     echo "Displaying x"
                     echo x
               
