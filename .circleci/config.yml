@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Debug Test Files
           command: |
-            PARAM_SELECT_BY_NAME=$(circleci tests glob 'tests/**/*.m' | awk -F'[/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print "\x27" $0 "\x27"}' | paste -sd, -)
+            PARAM_SELECT_BY_NAME= $(circleci tests glob 'tests/**/*.m' | circleci tests split --split-by=filesize | awk -F'[/.]' '{print "\x27" $(NF-1) "\x27"}' | paste -sd, -)
             selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{
                 for(i=1; i<=NF; i++) {
                     gsub(/\047/, "\047\047", $i);  
