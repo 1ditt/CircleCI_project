@@ -1,8 +1,9 @@
 version: 2.1
 orbs: 
   matlab: mathworks/matlab@1 
+
 jobs:
-  test:
+  test-linux:
     machine:
       image: ubuntu-2004:current 
     parallelism: 2
@@ -13,9 +14,35 @@ jobs:
               x=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $NF "/*"}')
               echo "Displaying x"
               echo "$x"
-              
+
+  test-macos:
+    macos:
+      xcode: "13.2.1" # You can choose the appropriate Xcode version
+    steps:
+      - checkout  
+      - run:
+          command: |
+              x=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $NF "/*"}')
+              echo "Displaying x"
+              echo "$x"
+
+  test-windows:
+    machine:
+      image: windows-server-2019:stable
+    steps:
+      - checkout  
+      - run:
+          name: Run tests
+          shell: powershell.exe
+          command: |
+              $x = circleci tests glob 'tests/**/*.m' | circleci tests split | ForEach-Object { $_ -replace '\\', '/' -replace '^.*[\\/]', '' + '/*' }
+              echo "Displaying x"
+              echo $x
+
 workflows:
   version: 2
   try:
     jobs:
-      - test
+      - test-linux
+      - test-macos
+      - test-windows
