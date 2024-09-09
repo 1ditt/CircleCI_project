@@ -12,8 +12,8 @@ jobs:
       - run:
           name: Debug Test Files
           command: |
-            PARAM_SELECT_BY_NAME=$('test1' 'test2' 'test3' 'test4')
-            selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{
+            PARAM_SELECT_BY_NAME='test1' 'test2' 'test3' 'test4'
+            selectByName=$(echo "$PARAM_SELECT_BY_NAME" | awk '{
                 for(i=1; i<=NF; i++) {
                     gsub(/\047/, "\047\047", $i);  
                     printf "\047%s\047%s", $i, (i==NF ? "" : ", "); 
