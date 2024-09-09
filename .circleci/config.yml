@@ -12,7 +12,7 @@ jobs:
           command: |
                     x= $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $(NF-1) "/*"}')
                     echo "Displaying x"
-                    echo x
+                    echo $x
               
 workflows:
   version: 2
