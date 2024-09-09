@@ -8,11 +8,27 @@ jobs:
     parallelism: 2
     steps:
       - checkout  
-
+      - run:
+          command: |
+            echo 'myvar = 123' > startup.m
+            mkdir src
+            echo 'function c=add(a,b);c=a+b;' > src/add.m
+            mkdir tests
+            echo "%% StartupTest" > tests/mytest.m
+            echo "evalin('base','assert(myvar==123)')" >> tests/mytest.m
+            echo "%% FirstTest" >> tests/mytest.m
+            echo "assert(add(1,2)==3)" >> tests/mytest.m
+            mkdir tests/filteredTest
+            echo "%% simpleTest" >> tests/filteredTest/filtertest.m
+            echo "assert(2==2)" >> tests/filteredTest/filtertest.m
+            printf "%% FilterByTag\n" >> tests/filteredTest/TaggedTest.m
+            printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
+            printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
+          shell: bash
       - run:
           name: Debug Test Files
           command: |
-            PARAM_SELECT_BY_NAME="test1 test2 test3 test4"
+            PARAM_SELECT_BY_NAME=$(circleci tests glob 'tests/**/*.m' | awk -F'[/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print "\x27" $0 "\x27"}' | paste -sd, -)
             selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{
                 for(i=1; i<=NF; i++) {
                     gsub(/\047/, "\047\047", $i);  
