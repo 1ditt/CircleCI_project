@@ -10,9 +10,9 @@ jobs:
       - checkout  
       - run:
           command: |
-                x=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $NF}')
-                echo "Displaying x"
-                echo "$x"
+              x=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $NF "/*"}')
+              echo "Displaying x"
+              echo "$x"
               
 workflows:
   version: 2
