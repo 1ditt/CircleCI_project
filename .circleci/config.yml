@@ -1,43 +1,43 @@
 version: 2.1
-orbs: 
-  matlab: mathworks/matlab@1 
+orbs:
+  matlab: mathworks/matlab@1
+  win: circleci/windows@5.0
 
 jobs:
   test-linux:
     machine:
-      image: ubuntu-2004:current 
+      image: ubuntu-2004:current
     parallelism: 2
     steps:
-      - checkout  
+      - checkout
       - run:
           command: |
-              x=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $NF "/*"}')
-              echo "Displaying x"
-              echo "$x"
+            x=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $NF "/*"}')
+            echo "Displaying x"
+            echo "$x"
 
   test-macos:
     macos:
       xcode: "13.2.1" # You can choose the appropriate Xcode version
     steps:
-      - checkout  
+      - checkout
       - run:
           command: |
-              x=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $NF "/*"}')
-              echo "Displaying x"
-              echo "$x"
+            x=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $NF "/*"}')
+            echo "Displaying x"
+            echo "$x"
 
   test-windows:
-    machine:
-      image: windows-server-2019:stable
+    executor: win/default
     steps:
-      - checkout  
+      - checkout
       - run:
           name: Run tests
           shell: powershell.exe
           command: |
-              $x = circleci tests glob 'tests/**/*.m' | circleci tests split | ForEach-Object { $_ -replace '\\', '/' -replace '^.*[\\/]', '' + '/*' }
-              echo "Displaying x"
-              echo $x
+            $x = circleci tests glob 'tests/**/*.m' | circleci tests split | ForEach-Object { $_ -replace '\\', '/' -replace '^.*[\\/]', '' + '/*' }
+            echo "Displaying x"
+            echo $x
 
 workflows:
   version: 2
