@@ -33,7 +33,6 @@ jobs:
       - checkout
       - run:
           name: Run tests
-          shell: powershell.exe
           command: |
              x=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $NF "/*"}')
              echo "Displaying x"
