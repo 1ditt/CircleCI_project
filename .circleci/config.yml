@@ -1,47 +1,17 @@
 version: 2.1
 orbs:
   matlab: mathworks/matlab@1
-  win: circleci/windows@5.0
-
 jobs:
-  test-linux:
+  run-matlab-tests:    
     machine:
-      image: ubuntu-2004:current
-    parallelism: 2
+      image: ubuntu-2204:current
+    parallelism: 4
     steps:
       - checkout
-      - run:
-          command: |
-            x=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $NF "/*"}')
-            echo "Displaying x"
-            echo "$x"
-
-  test-macos:
-    macos:
-      xcode: "13.2.1" # You can choose the appropriate Xcode version
-    steps:
-      - checkout
-      - run:
-          command: |
-            x=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $NF "/*"}')
-            echo "Displaying x"
-            echo "$x"
-
-  test-windows:
-    executor: win/default
-    steps:
-      - checkout
-      - run:
-          name: Run tests
-          command: |
-             x=$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $NF "/*"}')
-             echo "Displaying x"
-             echo $x
-
+      - matlab/install
+      - matlab/run-tests:
+          select-by-name: $(circleci tests glob "tests/**/*.m" | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
 workflows:
-  version: 2
-  try:
+  test:
     jobs:
-      - test-linux
-      - test-macos
-      - test-windows
+      - run-matlab-tests
